@@ -10,7 +10,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 async function callWithRetry(messages, retries = 3, delay = 500) {
     try {
         const prompt = messages.map(m => `${m.role}: ${m.content}`).join("\n");
-        const model = genAI.getGenerativeModel({ model: "gemma3" }); // Model changed (author is broke)
+        const model = genAI.getGenerativeModel({ model: "gemma-3-27b-it" }); // Model changed (author is broke)
         const result = await model.generateContent(prompt);
         const rawReply = result.response.text();
         return marked(rawReply || "No response.");

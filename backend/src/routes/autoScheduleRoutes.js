@@ -91,7 +91,7 @@ No explanations or markdown.
 
         // ---- 3. Call Gemini ----
         const llmResponse = await gemini.chat.completions.create({
-            model: "gemma3", // Author changed the model due to budget issues
+            model: "gemma-3-27b-it", // Author changed the model due to budget issues
             messages: [{ role: "user", content: prompt }]
         });
 
