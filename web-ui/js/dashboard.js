@@ -11,7 +11,7 @@ class IrrigationDashboard {
         this.weatherApiKey = '6a51e7780b6a4aaa82935631250611'; // <-- put your WeatherAPI key here
 
         // Default location if ESP32 hasn't sent data yet
-        this.weatherQuery = 'Jakarta';
+        this.weatherQuery = 'Depok';
         this.currentPublicIP = null;
 
         this.esp32Connected = false;
