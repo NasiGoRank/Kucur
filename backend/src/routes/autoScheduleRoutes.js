@@ -2,13 +2,12 @@ import express from "express";
 import fetch from "node-fetch";
 import OpenAI from "openai";
 import { loadScheduleJobs } from "../server.js";
-import { query } from "../database/db.js"; // Updated import
+import { query } from "../database/db.js";
 import { DateTime } from "luxon";
 
 const router = express.Router();
 
 // ===== Gemini Setup =====
-// Using OpenAI client SDK to access Gemini via compatible endpoint
 const gemini = new OpenAI({
     apiKey: process.env.GEMINI_API_KEY,
     baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
@@ -17,7 +16,6 @@ const gemini = new OpenAI({
 // ===== Main Route =====
 router.post("/", async (req, res) => {
     try {
-        // TERIMA PARAMETER LOCATION
         const { soil, rain, location } = req.body;
         const weatherKey = process.env.WEATHER_API_KEY;
 
@@ -25,8 +23,6 @@ router.post("/", async (req, res) => {
             return res.status(500).json({ error: "Missing WEATHER_API_KEY" });
         }
 
-        // ---- 1. Fetch Weather Forecast ----
-        // GUNAKAN LOKASI DARI PARAMETER, DEFAULT JAKARTA
         const q = location || "Jakarta";
 
         const forecastURL = `https://api.weatherapi.com/v1/forecast.json?key=${weatherKey}&q=${encodeURIComponent(q)}&days=1&aqi=no&alerts=no`;
@@ -40,7 +36,6 @@ router.post("/", async (req, res) => {
         const tz = weatherData.location.tz_id;
         const localtime = weatherData.location.localtime;
 
-        // ... (Prompt generation logic remains the same) ...
         const forecastSummary = weatherData.forecast.forecastday[0].hour.map(h => ({
             time: h.time,
             temp_c: h.temp_c,
@@ -50,7 +45,7 @@ router.post("/", async (req, res) => {
 
         const now = DateTime.local().setZone(tz);
 
-        // Tambahan info untuk AI agar lebih presisi
+
         const dateRangeHint = `Current Date: ${now.toFormat("yyyy-MM-dd")}`;
 
         const prompt = `
@@ -96,7 +91,7 @@ No explanations or markdown.
 
         // ---- 3. Call Gemini ----
         const llmResponse = await gemini.chat.completions.create({
-            model: "gemini-2.5-flash",
+            model: "gemma3", // Author changed the model due to budget issues
             messages: [{ role: "user", content: prompt }]
         });
 
