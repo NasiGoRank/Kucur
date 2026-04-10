@@ -21,7 +21,7 @@ dotenv.config();
 const app = express();
 const API_PORT = process.env.PORT || 5000;
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
-const DEFAULT_CITY = 'Jakarta'; // Fallback city
+const DEFAULT_CITY = 'Depok'; // Fallback city
 
 app.use(cors());
 app.use(express.json());
